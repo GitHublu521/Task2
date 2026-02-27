@@ -1,0 +1,41 @@
+name: Autograding
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  syntax-check:
+    name: "Syntax Check"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Check syntax
+        run: python -m pytest tests/test_syntax.py -v
+
+  grading:
+    name: "Grading (5 × 20 = 100 pts)"
+    runs-on: ubuntu-latest
+    needs: syntax-check
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install pandas
+        run: pip install pandas
+      - name: "Task 1: Weight Initialization (20 pts)"
+        run: python -m pytest tests/test_results.py::TestTask1 -v
+      - name: "Task 2: Regularization (20 pts)"
+        run: python -m pytest tests/test_results.py::TestTask2 -v
+      - name: "Task 3: BatchNorm (20 pts)"
+        run: python -m pytest tests/test_results.py::TestTask3 -v
+      - name: "Task 4: Robustness (20 pts)"
+        run: python -m pytest tests/test_results.py::TestTask4 -v
+      - name: "Task 5: Hyperparameter Search (20 pts)"
+        run: python -m pytest tests/test_results.py::TestTask5 -v

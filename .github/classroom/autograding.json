@@ -1,0 +1,54 @@
+{
+  "tests": [
+    {
+      "name": "Task 1: Weight Initialization",
+      "setup": "pip install pandas",
+      "run": "python -m pytest tests/test_results.py::TestTask1 -v",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 20
+    },
+    {
+      "name": "Task 2: Regularization",
+      "setup": "pip install pandas",
+      "run": "python -m pytest tests/test_results.py::TestTask2 -v",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 20
+    },
+    {
+      "name": "Task 3: BatchNorm",
+      "setup": "pip install pandas",
+      "run": "python -m pytest tests/test_results.py::TestTask3 -v",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 20
+    },
+    {
+      "name": "Task 4: Robustness",
+      "setup": "pip install pandas",
+      "run": "python -m pytest tests/test_results.py::TestTask4 -v",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 20
+    },
+    {
+      "name": "Task 5: Hyperparameter Search",
+      "setup": "pip install pandas",
+      "run": "python -m pytest tests/test_results.py::TestTask5 -v",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 20
+    }
+  ]
+}
