@@ -5,39 +5,103 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  workflow_dispatch:
+  repository_dispatch:
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
 
 jobs:
-  syntax-check:
-    name: "Syntax Check"
+  run-autograding-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-      - name: Install pytest
-        run: pip install pytest
-      - name: Check syntax
-        run: python -m pytest tests/test_syntax.py -v
 
-  grading:
-    name: "Grading (5 × 20 = 100 pts)"
-    runs-on: ubuntu-latest
-    needs: syntax-check
-    steps:
-      - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-      - name: Install dependencies
+
+      - name: Install deps
         run: pip install pytest pandas
-      - name: "Task 1: Weight Initialization (20 pts)"
-        run: python -m pytest tests/test_results.py::TestTask1 -v
-      - name: "Task 2: Regularization (20 pts)"
-        run: python -m pytest tests/test_results.py::TestTask2 -v
-      - name: "Task 3: BatchNorm (20 pts)"
-        run: python -m pytest tests/test_results.py::TestTask3 -v
-      - name: "Task 4: Robustness (20 pts)"
-        run: python -m pytest tests/test_results.py::TestTask4 -v
-      - name: "Task 5: Hyperparameter Search (20 pts)"
-        run: python -m pytest tests/test_results.py::TestTask5 -v
+
+      # --- Gate: Syntax must pass ---
+      - name: Syntax check (gate)
+        id: syntax
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Syntax Check
+          command: python -m pytest tests/test_syntax.py -v
+          timeout: 600
+          max-score: 0
+
+      # If syntax fails, fail the workflow explicitly
+      - name: Fail if syntax fails
+        if: steps.syntax.outputs.score != steps.syntax.outputs.max-score
+        run: exit 1
+
+      # --- Scored tasks (5 × 20 = 100) ---
+      - name: Task 1 (20 pts)
+        if: success()
+        id: task1
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Task 1
+          command: python -m pytest tests/test_results.py::TestTask1 -v
+          timeout: 1200
+          max-score: 20
+
+      - name: Task 2 (20 pts)
+        if: success()
+        id: task2
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Task 2
+          command: python -m pytest tests/test_results.py::TestTask2 -v
+          timeout: 1200
+          max-score: 20
+
+      - name: Task 3 (20 pts)
+        if: success()
+        id: task3
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Task 3
+          command: python -m pytest tests/test_results.py::TestTask3 -v
+          timeout: 1200
+          max-score: 20
+
+      - name: Task 4 (20 pts)
+        if: success()
+        id: task4
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Task 4
+          command: python -m pytest tests/test_results.py::TestTask4 -v
+          timeout: 1200
+          max-score: 20
+
+      - name: Task 5 (20 pts)
+        if: success()
+        id: task5
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Task 5
+          command: python -m pytest tests/test_results.py::TestTask5 -v
+          timeout: 1200
+          max-score: 20
+
+      # --- Reporter: always runs so Classroom can collect results ---
+      - name: Autograding Reporter
+        if: always()
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          SYNTAX_RESULTS: "${{ steps.syntax.outputs.result }}"
+          TASK1_RESULTS: "${{ steps.task1.outputs.result }}"
+          TASK2_RESULTS: "${{ steps.task2.outputs.result }}"
+          TASK3_RESULTS: "${{ steps.task3.outputs.result }}"
+          TASK4_RESULTS: "${{ steps.task4.outputs.result }}"
+          TASK5_RESULTS: "${{ steps.task5.outputs.result }}"
+        with:
+          runners: syntax,task1,task2,task3,task4,task5
