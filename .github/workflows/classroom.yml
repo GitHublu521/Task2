@@ -15,6 +15,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
+      - name: Install pytest
+        run: pip install pytest
       - name: Check syntax
         run: python -m pytest tests/test_syntax.py -v
 
@@ -27,8 +29,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-      - name: Install pandas
-        run: pip install pandas
+      - name: Install dependencies
+        run: pip install pytest pandas
       - name: "Task 1: Weight Initialization (20 pts)"
         run: python -m pytest tests/test_results.py::TestTask1 -v
       - name: "Task 2: Regularization (20 pts)"
