@@ -1,0 +1,6 @@
+method,final_train_loss,final_val_acc
+default,2.3023,0.1
+xavier_uniform,1.4601,0.2979
+xavier_normal,1.4005,0.2986
+kaiming_uniform,1.1298,0.3839
+kaiming_normal,1.2154,0.3704

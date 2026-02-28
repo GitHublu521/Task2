@@ -1,0 +1,24 @@
+{
+  "No Augmentation": {
+    "gaussian_noise_s1": 0.5833,
+    "gaussian_noise_s3": 0.5551,
+    "gaussian_noise_s5": 0.532,
+    "frost_s1": 0.5589,
+    "frost_s3": 0.4504,
+    "frost_s5": 0.4349,
+    "brightness_s1": 0.5904,
+    "brightness_s3": 0.5646,
+    "brightness_s5": 0.4717
+  },
+  "With Augmentation": {
+    "gaussian_noise_s1": 0.6222,
+    "gaussian_noise_s3": 0.5359,
+    "gaussian_noise_s5": 0.4797,
+    "frost_s1": 0.5939,
+    "frost_s3": 0.468,
+    "frost_s5": 0.4322,
+    "brightness_s1": 0.6296,
+    "brightness_s3": 0.595,
+    "brightness_s5": 0.503
+  }
+}

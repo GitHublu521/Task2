@@ -1,0 +1,4 @@
+model,use_bn,final_val_acc,best_val_acc
+SimpleCNN (no BN),False,0.5934,0.5943
+DeeperCNN (no BN),False,0.5851,0.5942
+DeeperCNN (with BN),True,0.6856,0.6856

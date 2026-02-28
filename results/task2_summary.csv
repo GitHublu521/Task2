@@ -1,0 +1,5 @@
+config,weight_decay,dropout,final_train_acc,final_val_acc,generalization_gap
+Baseline (No Regularization),0.0,0.0,1.0,0.5934,0.4066
+Dropout Only,0.0,0.3,0.9808,0.6029,0.3779
+Weight Decay Only,0.001,0.0,1.0,0.5874,0.4126
+Both (Dropout + Weight Decay),0.001,0.3,0.949,0.6093,0.3397

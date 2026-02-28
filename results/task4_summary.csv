@@ -1,0 +1,7 @@
+corruption,model,avg_accuracy
+gaussian_noise,No Augmentation,0.5568
+gaussian_noise,With Augmentation,0.5459
+frost,No Augmentation,0.4814
+frost,With Augmentation,0.498
+brightness,No Augmentation,0.5422
+brightness,With Augmentation,0.5759
