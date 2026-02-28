@@ -90,7 +90,7 @@ Four regularization configurations were tested on SimpleCNN to quantify their ab
 - Weight decay alone has a negligible/negative effect (validation accuracy drops by 0.6%), likely due to over-regularization.  
 - **Synergistic Effect**: Combining Dropout and L2 regularization achieves the smallest generalization gap (33.97%) and highest validation accuracy (60.93%), demonstrating complementary effects.  
 
-## 5. Task 3: Batch Normalization
+## 5. Task 3: BatchNorm
 ### 5.1 Experimental Design
 Batch normalization (BN) was added to SimpleCNN and DeeperCNN to evaluate its impact on deep network performance:  
 - SimpleCNN (no BN)  
