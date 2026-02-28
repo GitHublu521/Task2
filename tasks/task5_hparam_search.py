@@ -12,7 +12,7 @@ import json
 import optuna
 import pandas as pd
 import torch
-
+import torch.nn as nn
 from dataset import get_cifar10_loaders
 from models.cnn import SimpleCNN
 from train import train_model
@@ -78,7 +78,67 @@ def objective(trial, config, device):
     #   6. Return the final validation accuracy: history["val_acc"][-1]
     #
     # =========================================================================
-    raise NotImplementedError("TODO: Implement Optuna objective function")
+
+    # 1. 采样超参数
+    lr = trial.suggest_float("lr", cfg["lr_range"][0], cfg["lr_range"][1], log=True)
+    weight_decay = trial.suggest_float("weight_decay", cfg["weight_decay_range"][0], cfg["weight_decay_range"][1],
+                                       log=True)
+    dropout = trial.suggest_float("dropout", cfg["dropout_range"][0], cfg["dropout_range"][1])
+    batch_size = trial.suggest_categorical("batch_size", cfg["batch_size_choices"])
+
+    # 2. 创建数据加载器（使用采样的batch_size）
+    train_loader, test_loader = get_cifar10_loaders(
+        batch_size=batch_size,
+        subset_size=config.get("subset_size"),  # 可能没有，用get避免错误
+        num_workers=config["num_workers"],
+        augment=True  # 通常数据增强有助于泛化
+    )
+
+    # 3. 构建带Dropout的SimpleCNN模型
+
+    # 创建基础模型
+    model = SimpleCNN(num_classes=10)
+
+    # 手动添加Dropout（参考task2的build_model_with_dropout）
+    if dropout > 0.0:
+        # 获取分类器层
+        layers = list(model.classifier.children())
+        new_layers = []
+        for i, layer in enumerate(layers):
+            if isinstance(layer, nn.Linear) and i == len(layers) - 1:
+                # 在最后一个Linear层前添加Dropout
+                new_layers.append(nn.Dropout(p=dropout))
+            new_layers.append(layer)
+        model.classifier = nn.Sequential(*new_layers)
+
+    # 4. 创建优化器（使用采样的lr和weight_decay）
+    optimizer = torch.optim.Adam(
+        model.parameters(),
+        lr=lr,
+        weight_decay=weight_decay
+    )
+
+    # 5. 训练模型（只训练epochs_per_trial轮，加快搜索速度）
+    history = train_model(
+        model,
+        train_loader,
+        test_loader,
+        optimizer,
+        device=device,
+        epochs=cfg["epochs_per_trial"]
+    )
+
+    # 6. 返回最终验证准确率
+    final_val_acc = history["val_acc"][-1]
+
+    # 打印本次试验的结果（可选，便于观察）
+    print(
+        f"Trial {trial.number}: lr={lr:.6f}, wd={weight_decay:.6f}, dropout={dropout:.2f}, batch={batch_size}, val_acc={final_val_acc:.4f}")
+
+    return final_val_acc
+
+    # 重要：删除或注释掉下面的raise语句
+    # raise NotImplementedError("TODO: Implement Optuna objective function")
 
 
 def run_task5():

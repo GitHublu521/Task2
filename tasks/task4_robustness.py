@@ -58,7 +58,72 @@ def run_task4():
     # categories (e.g., one noise, one blur, one weather/digital).
     # See "all_corruptions" in config.json for the full list.
     # =========================================================================
-    raise NotImplementedError("TODO: Train model_no_aug and model_aug")
+
+    # 训练模型1：不带数据增强
+    print("\n--- Training model WITHOUT augmentation ---")
+    set_seed(config["seed"])  # 设置随机种子，保证可重复性
+
+    # 获取不带增强的数据加载器
+    train_loader_no_aug, test_loader = get_cifar10_loaders(
+        batch_size=config["batch_size"],
+        subset_size=config.get("subset_size"),  # 可能没有，用get避免错误
+        num_workers=config["num_workers"],
+        augment=False  # 关键：不带数据增强
+    )
+
+    # 创建模型
+    model_no_aug = SimpleCNN(num_classes=10)
+
+    # 定义优化器
+    optimizer_no_aug = torch.optim.Adam(
+        model_no_aug.parameters(),
+        lr=cfg["lr"]
+    )
+
+    # 训练模型
+    history_no_aug = train_model(
+        model_no_aug,
+        train_loader_no_aug,
+        test_loader,
+        optimizer_no_aug,
+        device=device,
+        epochs=cfg["epochs"]
+    )
+
+    # 训练模型2：带数据增强
+    print("\n--- Training model WITH augmentation ---")
+    set_seed(config["seed"])  # 同样设置种子，公平比较
+
+    # 获取带增强的数据加载器
+    train_loader_aug, _ = get_cifar10_loaders(
+        batch_size=config["batch_size"],
+        subset_size=config.get("subset_size"),
+        num_workers=config["num_workers"],
+        augment=True  # 关键：带数据增强
+    )
+
+    # 创建模型
+    model_aug = SimpleCNN(num_classes=10)
+
+    # 定义优化器
+    optimizer_aug = torch.optim.Adam(
+        model_aug.parameters(),
+        lr=cfg["lr"]
+    )
+
+    # 训练模型
+    history_aug = train_model(
+        model_aug,
+        train_loader_aug,
+        test_loader,
+        optimizer_aug,
+        device=device,
+        epochs=cfg["epochs"]
+    )
+
+    # 注意：这里要删除或注释掉下面的raise语句
+    # raise NotImplementedError("TODO: Train model_no_aug and model_aug")
+
 
     # --- Evaluation on CIFAR-10-C (provided) ---
     print("\nEvaluating on CIFAR-10-C corruptions...")

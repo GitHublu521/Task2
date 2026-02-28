@@ -45,30 +45,22 @@ class DeepMLP(nn.Module):
         self.activation_stds = []
 
     def _init_weights(self, module):
-        """Initialize weights of Linear layers based on self.init_method.
+        """Initialize weights of Linear layers based on self.init_method."""
+        # 检查是否是线性层
+        if isinstance(module, nn.Linear):
+            # 根据初始化方法选择
+            if self.init_method == "xavier_uniform":
+                nn.init.xavier_uniform_(module.weight)
+            elif self.init_method == "xavier_normal":
+                nn.init.xavier_normal_(module.weight)
+            elif self.init_method == "kaiming_uniform":
+                nn.init.kaiming_uniform_(module.weight, mode='fan_in', nonlinearity='relu')
+            elif self.init_method == "kaiming_normal":
+                nn.init.kaiming_normal_(module.weight, mode='fan_in', nonlinearity='relu')
 
-        Supported methods:
-            - "xavier_uniform": nn.init.xavier_uniform_
-            - "xavier_normal":  nn.init.xavier_normal_
-            - "kaiming_uniform": nn.init.kaiming_uniform_ (mode='fan_in', nonlinearity='relu')
-            - "kaiming_normal":  nn.init.kaiming_normal_ (mode='fan_in', nonlinearity='relu')
-
-        For all methods, biases should be initialized to zero.
-
-        Args:
-            module: A PyTorch module (called via self.apply()).
-        """
-        # =====================================================================
-        # TODO: Implement weight initialization for Linear layers.
-        #
-        # Check if `module` is an instance of nn.Linear.
-        # Based on self.init_method, apply the appropriate initialization
-        # to module.weight using the torch.nn.init functions listed above.
-        # Initialize module.bias to zeros using nn.init.zeros_.
-        #
-        # Hint: Use if/elif to branch on self.init_method.
-        # =====================================================================
-        raise NotImplementedError("TODO: Implement _init_weights()")
+            # 偏置初始化为0
+            if module.bias is not None:
+                nn.init.zeros_(module.bias)
 
     def forward(self, x):
         """Forward pass with optional activation statistics recording."""

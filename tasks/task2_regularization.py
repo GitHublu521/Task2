@@ -45,7 +45,32 @@ def get_reg_configs():
     #
     # Return a list of 4 dicts, each with "name", "weight_decay", "dropout".
     # =========================================================================
-    raise NotImplementedError("TODO: Define regularization configs in get_reg_configs()")
+
+    # 定义4种正则化配置
+    configs = [
+        {
+            "name": "Baseline (No Regularization)",
+            "weight_decay": 0.0,
+            "dropout": 0.0
+        },
+        {
+            "name": "Dropout Only",
+            "weight_decay": 0.0,
+            "dropout": 0.3  # dropout概率30%
+        },
+        {
+            "name": "Weight Decay Only",
+            "weight_decay": 1e-3,  # L2正则化强度0.001
+            "dropout": 0.0
+        },
+        {
+            "name": "Both (Dropout + Weight Decay)",
+            "weight_decay": 1e-3,
+            "dropout": 0.3
+        }
+    ]
+
+    return configs
 
 
 def build_model_with_dropout(dropout: float, num_classes: int = 10):
