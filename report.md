@@ -122,7 +122,7 @@ Model robustness was evaluated on clean and corrupted CIFAR-10-C data (Hendrycks
   - Digital: brightness (severity = 3)  
 
 ### 6.2 Results
-*Clean test accuracy baseline (from Task 2): 59.34% (No Augmentation) / 60.93% (With Augmentation)*
+
 
 | Corruption Type   | No Augmentation | With Augmentation | Difference |
 |-------------------|-----------------|-------------------|------------|
@@ -134,7 +134,7 @@ Model robustness was evaluated on clean and corrupted CIFAR-10-C data (Hendrycks
 - Brightness augmentation directly improves robustness to brightness corruptions (+3.37%), confirming alignment between augmentation and corruption type.  
 - Gaussian noise corruption shows no benefit (accuracy drops by 1.09%), as augmentation does not include noise injection.  
 - Frost corruption shows mild improvement (+1.66%), likely due to indirect augmentation effects (e.g., flip/crop simulating partial occlusion).  
-- Note: Clean test accuracy (59.34% for no augmentation, 60.93% with augmentation) is reported in Task 2 results and serves as the baseline for corrupted data comparison.
+
 ## 7. Task 5: Hyperparameter Search
 ### 7.1 Experimental Design
 Optuna (TPE sampler) was used to search for optimal hyperparameters on SimpleCNN (20 trials):  
