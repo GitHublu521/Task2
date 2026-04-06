@@ -65,7 +65,7 @@ Five weight initialization methods were compared on a 20-layer MLP to evaluate t
   Xavier initialization assumes linear activation functions (suitable for tanh/sigmoid), while Kaiming initialization is optimized for ReLU (accounts for 50% neuron zero-out).  
 - **Key Findings**:  
   1. Kaiming uniform outperforms all other methods (8.5% higher accuracy than Xavier variants), confirming its suitability for ReLU-based deep networks.  
-  2. Default initialization leads to complete gradient vanishing (10% accuracy = random guessing), highlighting the necessity of proper initialization for deep MLPs.  
+  2. Default initialization leads to complete gradient vanishing , highlighting the necessity of proper initialization for deep MLPs.  
   3. Uniform variants outperform normal variants for Kaiming, while normal slightly outperforms uniform for Xavier.  
 
 ## 4. Task 2: Regularization
